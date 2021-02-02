@@ -14,7 +14,7 @@
               <a-button type="dashed" block> 放大镜 </a-button>
             </li>
             <li @click="handelClick(2)">
-              <a-button type="dashed" block> 多行文本填写框 </a-button>
+              <a-button type="dashed" block> 滑动验证 </a-button>
             </li>
             <li @click="handelClick(3)">
               <a-button type="dashed" block> 下拉选项框 </a-button>
@@ -76,7 +76,7 @@ export default {
           Newcontent = "Magnifier";
           break;
         case 2:
-          Newcontent = "mult-line";
+          Newcontent = "slidecheck";
           break;
         case 3:
           Newcontent = "drop-down";

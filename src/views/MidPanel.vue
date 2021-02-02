@@ -66,7 +66,7 @@ export default {
 
             break;
           case 2:
-            curCom = () => import("../components/old_file/MultLine"); //懒加载
+            curCom = () => import("../components/cpn/SlideCheck/SlideCheck"); //懒加载
 
             break;
           case 3:
