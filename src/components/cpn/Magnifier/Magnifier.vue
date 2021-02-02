@@ -26,7 +26,7 @@
       <div class="max-wrap" ref="maxBox" v-show="isShow">
         <img
           :src="require('./img/max.jpg')"
-          :style="{width: maxImgWidth + 'px', height: maxImgHeight + 'px'}"
+          :style="{ width: maxImgWidth + 'px', height: maxImgHeight + 'px' }"
           class="img"
           ref="img"
           @load="setMaskSize"
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import { tool } from '../../../utils'
+import { tool } from "../../../utils";
 export default {
-  name: 'Magnifier',
+  name: "Magnifier",
   props: {
     boxSize: {
       type: Number,
-      default: 400
+      default: 400,
     },
     // minImgUrl: {
     //   type: String,
@@ -55,25 +55,25 @@ export default {
     // },
     autoReverse: {
       type: Boolean,
-      default: true
+      default: true,
     },
     direction: {
       type: String,
-      default: "right"
-    }
+      default: "right",
+    },
   },
   data() {
     return {
       isShow: false,
       maxImgWidth: "",
-      maxImgHeight: ""
+      maxImgHeight: "",
     };
   },
   mounted() {
-    window.addEventListener('scroll', tool.throttle(this.setMaxBoxPos))
+    window.addEventListener("scroll", tool.throttle(this.setMaxBoxPos));
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', tool.throttle)
+    window.removeEventListener("scroll", tool.throttle);
   },
   methods: {
     // 大盒子为大图片宽高
@@ -95,10 +95,10 @@ export default {
       //在修改数据之后立即使用这个方法，能够获取更新后的DOM。
       //简单来说就是当数据更新时，在DOM中渲染完成后，执行回调函数。
 
-     // Vue在更新DOM时是异步执行的，也就是说在更新数据时其不会阻塞代码的执行，
-     //直到执行栈中代码执行结束之后，才开始执行异步任务队列的代码，
-     //所以在数据更新时，组件不会立即渲染，
-     //此时在获取到DOM结构后取得的值依然是旧的值，而在$nextTick方法中设定的回调函数会在组件渲染完成之后执行，取得DOM结构后取得的值便是新的值。
+      // Vue在更新DOM时是异步执行的，也就是说在更新数据时其不会阻塞代码的执行，
+      //直到执行栈中代码执行结束之后，才开始执行异步任务队列的代码，
+      //所以在数据更新时，组件不会立即渲染，
+      //此时在获取到DOM结构后取得的值依然是旧的值，而在$nextTick方法中设定的回调函数会在组件渲染完成之后执行，取得DOM结构后取得的值便是新的值。
       this.$nextTick(() => {
         // 当数据更新时，执行回调函数
         this.initDom();
@@ -116,9 +116,9 @@ export default {
       this.maxBox.style.height = this.boxSize + "px";
     },
     getDomAttr(el, attr) {
-    //  console.log(getComputedStyle(el)[attr])  402px
-   //  console.log(getComputedStyle(el)[attr].slice(0, -2))  402
-  //  去掉单位
+      //  console.log(getComputedStyle(el)[attr])  402px
+      //  console.log(getComputedStyle(el)[attr].slice(0, -2))  402
+      //  去掉单位
       return parseInt(getComputedStyle(el)[attr].slice(0, -2));
     },
     onMouseenter() {
@@ -136,6 +136,9 @@ export default {
       const maxImgWidth = this.$refs["img"].width;
       const minBoxWidth = this.smallWidth;
 
+      // 计算遮罩层的大小
+      //mask/smallbox=maxbox/maximg
+      //mask=maxbox/maximg*smallbox
       mask.style.width = minBoxWidth * (minBoxWidth / maxImgWidth) + "px";
       mask.style.height = minBoxWidth * (minBoxWidth / maxImgWidth) + "px";
 
@@ -147,18 +150,20 @@ export default {
       const padddingTop = this.getDomAttr(this.wrap, "padding-top");
 
       // 鼠标在遮罩层中央
+      // this.mask.offsetWidth为整个遮罩层的宽
       let left = e.clientX - leftPosition - this.mask.offsetWidth / 2;
       let top = e.clientY - topPosition - this.mask.offsetHeight / 2;
 
       // 根据鼠标移动设置大盒子位置
-      this.setMaxBoxPos()
+      this.setMaxBoxPos();
 
       if (left < paddingLeft) {
         // 遮罩层顶左边
         left = paddingLeft;
       } else if (
         // 遮罩层顶右边
-        left > this.small.offsetWidth - this.mask.offsetWidth + paddingLeft
+        left >
+        this.small.offsetWidth - this.mask.offsetWidth + paddingLeft
       ) {
         left = this.small.offsetWidth - this.mask.offsetWidth + paddingLeft;
       }
@@ -166,20 +171,24 @@ export default {
       if (top < padddingTop) {
         top = padddingTop;
       } else if (
-        top > this.small.offsetHeight - this.mask.offsetHeight + padddingTop
+        top >
+        this.small.offsetHeight - this.mask.offsetHeight + padddingTop
       ) {
         top = this.small.offsetHeight - this.mask.offsetHeight + padddingTop;
       }
-      
+
       // 更新遮罩层位置
       this.mask.style.left = left + "px";
       this.mask.style.top = top + "px";
 
       // 更新大图片位置
+      // 遮罩层移动的距离/(宽度差距) == 大图移动的距离/(宽度差距);
       const pX =
         (left - paddingLeft) / (this.smallWidth - this.mask.offsetWidth);
       const pY =
         (top - padddingTop) / (this.smallHeight - this.mask.offsetHeight);
+
+      // 遮罩层向左移动 大图就要向右移动，要保持相反的方向
       this.maxImg.style.left =
         -pX * (this.maxImg.width - this.maxBox.offsetWidth) + "px";
       this.maxImg.style.top =
@@ -202,7 +211,7 @@ export default {
         this.wrap.clientLeft +
         paddingLeft +
         this.small.clientWidth;
-        // 左边位置
+      // 左边位置
       const maxBoxLeftPos =
         leftPosition +
         this.wrap.clientLeft +
@@ -213,7 +222,8 @@ export default {
       let maxBoxPos = -1;
       if (this.autoReverse) {
         const isMaxBoxExceedWindow =
-          maxBoxRightPos + this.getDomAttr(this.maxBox, "width") >  window.innerWidth;
+          maxBoxRightPos + this.getDomAttr(this.maxBox, "width") >
+          window.innerWidth;
         maxBoxPos = isMaxBoxExceedWindow ? maxBoxLeftPos : maxBoxRightPos;
       } else {
         if (this.direction === "right") {
@@ -230,8 +240,8 @@ export default {
         padddingTop +
         this.small.clientTop +
         "px";
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -256,6 +266,7 @@ export default {
     border: 1px solid #ccc;
     overflow: hidden;
     background: #fff;
+    // border: 1px solid red;
     .img {
       position: absolute;
     }
